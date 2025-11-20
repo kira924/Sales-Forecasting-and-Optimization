@@ -1,0 +1,92 @@
+======================================================================
+ CAR DEALERSHIP PRIORITY RANKING SYSTEM 
+======================================================================
+
+Loading trained model and feature engineering pipeline...
+Model loaded: XGBoost with R² = 0.7063
+
+======================================================================
+ PROFIT ANALYSIS FROM TRAINING DATA
+======================================================================
+
+ Overall Profit Statistics:
+   Mean:      17,837.05
+   Median:    15,670.51
+   Std Dev:   10,945.68
+   Min:            0.01
+   Max:       49,130.04
+
+Profit Percentiles:
+   10th percentile:   4,555.66
+   25th percentile:  10,115.71
+   50th percentile:  15,670.51
+   75th percentile:  23,883.83
+   90th percentile:  34,882.27
+   95th percentile:  39,670.01
+   99th percentile:  46,062.39
+
+Average Profit by Car Make:
+   Mercedes    : Avg=  29,960  Median=  32,875  (47,348 cars)
+   Bmw         : Avg=  27,980  Median=  30,176  (51,448 cars)
+   Audi        : Avg=  26,757  Median=  28,671  (52,699 cars)
+   Ford        : Avg=  18,510  Median=  18,453  (59,825 cars)
+   Chevrolet   : Avg=  16,519  Median=  16,256  (60,009 cars)
+   Toyota      : Avg=  14,565  Median=  14,121  (95,612 cars)
+   Honda       : Avg=  13,670  Median=  14,406  (59,258 cars)
+   Nissan      : Avg=  13,249  Median=  13,905  (59,038 cars)
+   Hyundai     : Avg=  12,146  Median=  12,744  (60,174 cars)
+   Kia         : Avg=  11,958  Median=  12,529  (60,210 cars)
+
+
+
+======================================================================
+ EXAMPLE: NEXT MONTH CAR INVENTORY RANKING
+======================================================================
+
+ Current Date: November 13, 2025
+ Predicting for: December 2025
+
+======================================================================
+ PREDICTING PROFITS FOR DECEMBER 2025
+======================================================================
+
+ Building inventory of 10 cars...
+ Engineering features...
+ Making predictions using XGBoost...
+
+ Predictions complete!
+ 10 cars ranked by expected profit
+
+======================================================================
+ TOP 10 CARS BY EXPECTED PROFIT
+======================================================================
+Car_Make Car_Model  Car Year  Car Age  Quantity Sale Month Season Sales Region  Predicted_Profit  Confidence Risk_Level  Rank
+Mercedes   E-Class      2022        3         1   December Winter         East      13373.062500   66.858749       Low     1
+Mercedes   C-Class      2023        2         1   December Winter         East      12721.269531   65.160713       Low     2
+    Audi        A4      2023        2         1   December Winter         East      10805.453125   58.983673       Low     3
+     BMW        X5      2022        3         1   December Winter         East       7210.094238   38.530624     Medium    4
+     BMW  3 Series      2023        2         1   December Winter         East       6597.188965   32.819874       Low     5
+  Toyota     Camry      2023        2         1   December Winter         East       5940.381348   25.391996     Medium    6
+    Ford    Fusion      2022        3         1   December Winter         East       5601.523438   20.878666     Medium    7
+  Toyota   Corolla      2024        1         1   December Winter         East       4949.847656   10.461891     Medium    8
+   Honda     Civic      2024        1         1   December Winter         East       4448.157227    0.363237     Medium    9
+ Hyundai   Elantra      2024        1         1   December Winter         East       4443.761230    0.264668     Medium    10
+
+======================================================================
+ SUMMARY STATISTICS
+======================================================================
+Total Expected Profit: 76,090.73
+Average Profit per Car: 7,609.07
+Highest Profit: 13,373.06 (Mercedes E-Class)
+Lowest Profit: 4,443.76
+
+ Risk Distribution:
+    Low     : 4 cars (40%)
+    Medium  : 6 cars (60%)
+    High    : 0 cars (0%)
+
+ Investment Insights:
+  Low Risk Cars: $43,496.97 (57% of total)
+  Medium Risk Cars: $32,593.77 (43% of total)
+
+ RECOMMENDATION: Focus on the 4 low-risk vehicles for stable returns

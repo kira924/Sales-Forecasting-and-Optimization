@@ -1,0 +1,115 @@
+MODEL TRAINING & COMPARISON
+
+============================================================
+Training: Linear Regression
+============================================================
+
+Results:
+  Train MAE:  $5,166.12
+  Test MAE:   $5,165.49
+  Train RMSE: $6,719.16
+  Test RMSE:  $6,713.79
+  Train R²:   0.6232
+  Test R²:    0.6232
+  Train MAPE: 267.48%
+  Test MAPE:  265.16%
+  Time:       1.88s
+
+============================================================
+Training: Random Forest
+============================================================
+
+Results:
+  Train MAE:  $3,820.27
+  Test MAE:   $4,490.60
+  Train RMSE: $5,092.12
+  Test RMSE:  $6,013.07
+  Train R²:   0.7836
+  Test R²:    0.6978
+  Train MAPE: 204.91%
+  Test MAPE:  188.74%
+  Time:       175.97s
+
+============================================================
+Training: Gradient Boosting
+============================================================
+
+Results:
+  Train MAE:  $4,392.86
+  Test MAE:   $4,433.28
+  Train RMSE: $5,873.14
+  Test RMSE:  $5,928.59
+  Train R²:   0.7121
+  Test R²:    0.7062
+  Train MAPE: 239.45%
+  Test MAPE:  193.98%
+  Time:       465.29s
+
+============================================================
+Training: XGBoost
+============================================================
+
+Results:
+  Train MAE:  $4,393.56
+  Test MAE:   $4,432.19
+  Train RMSE: $5,874.54
+  Test RMSE:  $5,927.57
+  Train R²:   0.7120
+  Test R²:    0.7063
+  Train MAPE: 238.58%
+  Test MAPE:  197.31%
+  Time:       6.32s
+
+============================================================
+Training: LightGBM
+============================================================
+
+Results:
+  Train MAE:  $4,420.55
+  Test MAE:   $4,434.60
+  Train RMSE: $5,909.80
+  Test RMSE:  $5,928.41
+  Train R²:   0.7085
+  Test R²:    0.7062
+  Train MAPE: 239.81%
+  Test MAPE:  197.54%
+  Time:       6.00s
+
+============================================================
+MODEL COMPARISON SUMMARY
+============================================================
+            Model   Train MAE    Test MAE  Train RMSE   Test RMSE  Train R²  Test R²  Train MAPE  Test MAPE  Training Time (s)
+          XGBoost 4393.555358 4432.191834 5874.539337 5927.570232  0.711953 0.706291  238.579446 197.310832           6.320333
+         LightGBM 4420.554398 4434.604311 5909.796070 5928.407720  0.708485 0.706208  239.811064 197.537439           5.996732
+Gradient Boosting 4392.862689 4433.277518 5873.143571 5928.586163  0.712090 0.706190  239.452804 193.978803         465.288900
+    Random Forest 3820.266909 4490.597082 5092.122929 6013.065097  0.783572 0.697757  204.912245 188.735596         175.967748
+Linear Regression 5166.115025 5165.491327 6719.161042 6713.793473  0.623170 0.623209  267.483216 265.156630           1.878323
+
+
+============================================================
+BEST MODEL SELECTED
+============================================================
+Model: XGBoost
+Test R²: 0.7063
+Test MAE: $4,432.19
+Test MAPE: 197.31%
+
+============================================================
+TOP 15 MOST IMPORTANT FEATURES
+============================================================
+                   Feature  Importance
+Historical_Make_Avg_Profit    0.530316
+                  Quantity    0.186354
+                 Sale Year    0.129932
+                   Car Age    0.033448
+                 Make_Ford    0.029622
+Historical_Year_Avg_Profit    0.020217
+             Make_Mercedes    0.016098
+            Car_Model_Freq    0.012283
+         Quantity_x_CarAge    0.010988
+                 Make_Audi    0.005189
+            Make_Chevrolet    0.005082
+                  Car Year    0.004457
+      ModelFreq_x_Quantity    0.002866
+               Make_Toyota    0.002005
+                Make_Honda    0.001570

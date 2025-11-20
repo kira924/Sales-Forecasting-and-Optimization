@@ -1,0 +1,18 @@
+{
+  "system_name": "Car Dealership Analytics System",
+  "version": "1.0.0",
+  "created_date": "2025-11-15 10:57:51",
+  "models": {
+    "priority_ranking": {
+      "type": "Gradient Boosting",
+      "file": "priority_ranking_model.pkl",
+      "test_r2": 0.7063173051186008,
+      "test_mae": 4432.136306258126,
+      "features_count": 53
+    },
+    "sales_forecast": {
+      "type": "Prophet",
+      "file": "prophet_sales_model.pkl"
+    }
+  }
+}
