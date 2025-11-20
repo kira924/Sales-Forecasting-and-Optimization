@@ -1,0 +1,201 @@
+version: '3.8'
+
+services:
+  # ============================================
+  # BACKEND API (FastAPI)
+  # ============================================
+  backend:
+    build: 
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: car-sales-backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=Car Sales AI Platform
+      - ENVIRONMENT=production
+      - DEBUG=False
+      - HOST=0.0.0.0
+      - PORT=8000
+      - SECRET_KEY=${SECRET_KEY:-your-secret-key-change-in-production}
+      - CORS_ORIGINS=["http://localhost:3000", "http://frontend:3000"]
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./car_sales.db}
+    volumes:
+      - ./backend/models:/app/models
+      - ./backend/logs:/app/logs
+      - backend-data:/app/data
+    networks:
+      - car-sales-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "com.carsales.description=Backend API for Car Sales AI Platform"
+      - "com.carsales.service=backend"
+
+  # ============================================
+  # FRONTEND (React)
+  # ============================================
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - REACT_APP_API_URL=http://localhost:8000/api
+    container_name: car-sales-frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    environment:
+      - REACT_APP_API_URL=http://backend:8000/api
+      - NODE_ENV=production
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - car-sales-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    labels:
+      - "com.carsales.description=Frontend UI for Car Sales AI Platform"
+      - "com.carsales.service=frontend"
+
+  # ============================================
+  # NGINX (Reverse Proxy - Production Only)
+  # ============================================
+  nginx:
+    image: nginx:alpine
+    container_name: car-sales-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./frontend/build:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+      - frontend
+    networks:
+      - car-sales-network
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    labels:
+      - "com.carsales.description=Nginx reverse proxy"
+      - "com.carsales.service=nginx"
+    # Uncomment for production
+    # profiles:
+    #   - production
+
+  # ============================================
+  # DATABASE (PostgreSQL - Optional)
+  # ============================================
+  postgres:
+    image: postgres:15-alpine
+    container_name: car-sales-postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=car_sales
+      - POSTGRES_USER=car_sales_user
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-change-me-in-production}
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./backend/sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - car-sales-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U car_sales_user -d car_sales"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.carsales.description=PostgreSQL database"
+      - "com.carsales.service=database"
+    # Uncomment for production
+    # profiles:
+    #   - production
+
+  # ============================================
+  # REDIS (Caching - Optional)
+  # ============================================
+  redis:
+    image: redis:7-alpine
+    container_name: car-sales-redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - car-sales-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    labels:
+      - "com.carsales.description=Redis cache"
+      - "com.carsales.service=cache"
+    # Uncomment for production
+    # profiles:
+    #   - production
+
+# ============================================
+# NETWORKS
+# ============================================
+networks:
+  car-sales-network:
+    name: car-sales-network
+    driver: bridge
+
+# ============================================
+# VOLUMES
+# ============================================
+volumes:
+  backend-data:
+    name: car-sales-backend-data
+  postgres-data:
+    name: car-sales-postgres-data
+  redis-data:
+    name: car-sales-redis-data
+
+# ============================================
+# USAGE INSTRUCTIONS
+# ============================================
+# 
+# Development (Backend + Frontend only):
+# $ docker-compose up backend frontend
+#
+# Full Stack (with Nginx):
+# $ docker-compose up
+#
+# Production (with Database + Cache):
+# $ docker-compose --profile production up
+#
+# Stop all services:
+# $ docker-compose down
+#
+# Stop and remove volumes:
+# $ docker-compose down -v
+#
+# View logs:
+# $ docker-compose logs -f backend
+# $ docker-compose logs -f frontend
+#
+# Rebuild after code changes:
+# $ docker-compose up --build
+# ============================================

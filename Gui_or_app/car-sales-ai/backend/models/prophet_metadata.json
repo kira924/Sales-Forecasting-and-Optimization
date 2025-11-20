@@ -1,0 +1,25 @@
+{
+  "model_type": "Prophet",
+  "training_date": "2025-11-20",
+  "target_transform": "log",
+  "features": [
+    "Sales_t-1",
+    "Sales_t-3",
+    "Rolling_3M",
+    "Rolling_6M",
+    "Cumulative_Sales"
+  ],
+  "seasonality": {
+    "yearly": true,
+    "weekly": true,
+    "daily": false
+  },
+  "growth": "linear",
+  "interval_width": 0.9,
+  "regressors": [
+    "Season_Fall",
+    "Season_Spring",
+    "Season_Summer",
+    "Season_Winter"
+  ]
+}

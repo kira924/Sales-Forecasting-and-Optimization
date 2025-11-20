@@ -1,0 +1,15 @@
+# Core ML Libraries
+pandas
+numpy
+scikit-learn
+xgboost
+lightgbm
+prophet
+joblib
+
+# Web Framework (choose one)
+streamlit
+# OR
+fastapi
+uvicorn
+pydantic
