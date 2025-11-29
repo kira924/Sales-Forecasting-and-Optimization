@@ -1,5 +1,4 @@
 import React from 'react';
-// 1. ⚠️ قم بتغيير الاستيراد هنا: استبدل AreaChart بـ ComposedChart
 import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import { formatCurrency } from '../../utils/helpers';
 import { CHART_COLORS } from '../../utils/constants';
@@ -109,5 +108,6 @@ const TrendChart = ({ data }) => {
     </div>
   );
 };
+
 
 export default TrendChart;
