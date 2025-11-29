@@ -16,7 +16,7 @@ const PriorityRankingPage = () => {
   ]);
   const [formData, setFormData] = useState({
     targetMonth: '',
-    targetYear: new Date().getFullYear() + 1,
+    targetYear: new Date().getFullYear() ,
     region: 'East',
     profitMargin: 0.15,
   });
@@ -114,11 +114,16 @@ const PriorityRankingPage = () => {
         await new Promise(resolve => setTimeout(resolve, 1000));
       }
 
+      const payload = {
+        cars: cars,
+        target_month: formData.targetMonth,   
+        target_year: formData.targetYear,     
+        region: formData.region,
+        profit_margin: formData.profitMargin  
+      };
+
       // Call API
-      const data = await generatePriorityRanking({
-        cars,
-        ...formData,
-      });
+      const data = await generatePriorityRanking(payload);
       
       setResults(data);
       success('Priority ranking generated successfully!');

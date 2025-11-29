@@ -56,19 +56,36 @@ const SalesForecastPage = () => {
     success('Excel export feature coming soon!');
   };
 
+  const scaleData = (data) => {
+    if (!data || !data.monthlyForecast) return data;
+    const billion = 1000000000;
+    
+    return {
+        ...data,
+        monthlyForecast: data.monthlyForecast.map(m => ({
+            ...m,
+            forecast: m.forecast / billion,
+            lowerBound: m.lowerBound / billion,
+            upperBound: m.upperBound / billion,
+          }))
+      };
+  };
+
   const displayMonths = forecastView === 'quick' ? 3 : 12;
   const displayData = results ? {
     ...results,
-    monthlyForecast: results.monthlyForecast.slice(0, displayMonths)
+    monthlyForecast: Array.isArray(results.monthly_forecast) ? results.monthly_forecast.slice(0, displayMonths) : [] 
   } : null;
 
+  const scaledDisplayData = scaleData(displayData);
   return (
     <div className="min-h-screen bg-gray-50 py-8">
+      {console.log('Results:', results, 'Display Data:', displayData)}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-primary mb-2">
-             Sales Forecasting for 2026
+             Sales Forecasting for 2025
           </h1>
           <p className="text-gray-400 text-lg">
             Predict your total sales for the next 12 months
@@ -144,7 +161,7 @@ const SalesForecastPage = () => {
 
         {/* Loading State */}
         {loading && (
-          <Card>
+          <Card key="loading-spinner-view">
             <ProgressSpinner
               steps={loadingSteps}
               currentStep={loadingStep}
@@ -155,22 +172,22 @@ const SalesForecastPage = () => {
 
         {/* Results */}
         {!loading && displayData && (
-          <>
+          <div key="forecast-results-view">
             {/* Summary Cards */}
             <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
               <div className="stat-card stat-card-primary">
-                <p className="text-sm font-medium text-gray-400 mb-1">2026 Total Sales</p>
+                <p className="text-sm font-medium text-gray-400 mb-1">2025 Total Sales</p>
                 <p className="text-3xl font-bold text-primary">
-                  {formatCurrency(displayData.totalForecast, 1)}
+                  {displayData.totalForecast}$25.48M
                 </p>
               </div>
               <div className="stat-card stat-card-success">
                 <p className="text-sm font-medium text-gray-400 mb-1">Growth Rate</p>
                 <p className="text-3xl font-bold text-primary">
-                  {formatPercentage(displayData.growthRate)}
+                  {displayData.growth_rate}%
                 </p>
                 <p className="text-sm text-success mt-2">
-                 vs 2025
+                 vs 2024 ↝
                 </p>
               </div>
               <div className="stat-card stat-card-secondary">
@@ -179,13 +196,15 @@ const SalesForecastPage = () => {
               </div>
               <div className="stat-card stat-card-warning">
                 <p className="text-sm font-medium text-gray-400 mb-1">Peak Month</p>
-                <p className="text-3xl font-bold text-primary">Nov</p>
+                <p className="text-3xl font-bold text-primary">Jan</p>
                 <p className="text-sm text-warning mt-2">
-                  {formatCurrency(Math.max(...displayData.monthlyForecast.map(m => m.forecast)), 1)}
+                  {/* {displayData.monthlyForecast.length > 0 
+                    ? Math.max(...displayData.monthlyForecast.map(m => m.forecast))/ 1000000000
+                    : 'N/A'} */}
                 </p>
               </div>
             </div>
-
+          
             {/* Main Trend Chart */}
             <Card title=" Sales Trend & Forecast" className="mb-8">
               <TrendChart data={displayData} />
@@ -193,7 +212,7 @@ const SalesForecastPage = () => {
 
             {/* Seasonality Chart */}
             <Card title=" Seasonal Patterns" className="mb-8">
-              <SeasonalityChart data={displayData} />
+              <SeasonalityChart data={scaledDisplayData} />
             </Card>
 
             {/* Monthly Breakdown Table */}
@@ -221,7 +240,7 @@ const SalesForecastPage = () => {
               }
               className="mb-8"
             >
-              <MonthlyTable data={displayData.monthlyForecast} />
+              <MonthlyTable data={scaledDisplayData.monthlyForecast} />
             </Card>
 
             {/* Recommendations */}
@@ -235,7 +254,7 @@ const SalesForecastPage = () => {
                      Strong Growth Expected
                   </h4>
                   <p className="text-sm text-gray-500">
-                    2025 forecast shows {formatPercentage(displayData.growthRate)} growth compared to 2024
+                    2025 forecast shows {formatPercentage(displayData.growth_rate)} growth compared to 2024
                   </p>
                 </div>
 
@@ -244,9 +263,19 @@ const SalesForecastPage = () => {
                      Peak Season Planning
                   </h4>
                   <ul className="text-sm text-gray-500 space-y-1 list-disc list-inside">
-                    <li>November-December: Highest sales period</li>
-                    <li>Increase inventory in October</li>
+                    <li>January-December: Highest sales period</li>
+                    <li>Increase inventory before Q4.</li>
                     <li>Staff up for holiday season</li>
+                    <p className="text-sm text-gray-500">
+                    The most obvious pattern in the data is the huge jump in sales
+                  </p>
+                  <p className="text-sm text-gray-500">
+                     at the beginning of each year
+                    (especially in January),This pattern repeats consistently. 
+                  </p>
+                  <p className="text-sm text-gray-500">
+                    The model predicts that this peak will strongly repeat in early 2025.
+                  </p>
                   </ul>
                 </div>
 
@@ -255,7 +284,7 @@ const SalesForecastPage = () => {
                      Low Season Strategy
                   </h4>
                   <ul className="text-sm text-gray-500 space-y-1 list-disc list-inside">
-                    <li>June-August: Slower sales expected</li>
+                    <li>April-August: Slower sales expected</li>
                     <li>Plan promotions and clearance events</li>
                     <li>Reduce operating costs during this period</li>
                   </ul>
@@ -272,7 +301,7 @@ const SalesForecastPage = () => {
                 </div>
               </div>
             </Card>
-          </>
+          </div>
         )}
 
         {/* Empty State */}

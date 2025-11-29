@@ -1,5 +1,5 @@
 // API Configuration
-export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
+export const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8000/api';
 
 // Car Makes
 export const CAR_MAKES = [
@@ -45,14 +45,14 @@ export const YEARS = [2020, 2021, 2022, 2023, 2024, 2025, 2026];
 export const PROFIT_MARGINS = [
   { value: null, label: 'Raw predictions (full values)' },
   { value: 0.10, label: '10% margin (competitive market)' },
-  { value: 0.15, label: '15% margin (realistic dealer profit) ✅' },
+  { value: 0.15, label: '15% margin (realistic dealer profit)' },
   { value: 0.20, label: '20% margin (premium market)' }
 ];
 
 // Forecast View Options
 export const FORECAST_VIEWS = [
   { value: 'quick', label: 'Quick Preview (Next 3 Months)' },
-  { value: 'full', label: 'Full Year Forecast (Next 12 Months) ✅' }
+  { value: 'full', label: 'Full Year Forecast (Next 12 Months)' }
 ];
 
 // Risk Levels

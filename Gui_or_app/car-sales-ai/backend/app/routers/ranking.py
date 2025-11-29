@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 @router.post("/priority", response_model=RankingResponse)
 async def generate_priority_ranking(
     request: RankingRequest,
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """
     Generate priority ranking for car inventory
@@ -23,7 +23,7 @@ async def generate_priority_ranking(
     - **profit_margin**: Optional profit margin factor (0-1)
     """
     try:
-        logger.info(f"Generating ranking for user: {current_user.email}, cars: {len(request.cars)}")
+        # logger.info(f"Generating ranking for user: {current_user.email}, cars: {len(request.cars)}")
         
         result = ml_service.generate_priority_ranking(
             cars=request.cars,

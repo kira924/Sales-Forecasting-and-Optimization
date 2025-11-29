@@ -34,9 +34,9 @@ const MonthlyTable = ({ data }) => {
         <thead>
           <tr className="border-b-2 border-gray-200">
             <th className="text-left py-3 px-4 font-semibold text-gray-500">Month</th>
-            <th className="text-right py-3 px-4 font-semibold text-gray-500">Expected</th>
-            <th className="text-right py-3 px-4 font-semibold text-gray-500">Lower (95%)</th>
-            <th className="text-right py-3 px-4 font-semibold text-gray-500">Upper (95%)</th>
+            <th className="text-right py-3 px-4 font-semibold text-gray-500">Expected (M)</th>
+            <th className="text-right py-3 px-4 font-semibold text-gray-500">Lower (95%, M)</th>
+            <th className="text-right py-3 px-4 font-semibold text-gray-500">Upper (95%, M)</th>
             <th className="text-right py-3 px-4 font-semibold text-gray-500">Change</th>
           </tr>
         </thead>
@@ -53,10 +53,10 @@ const MonthlyTable = ({ data }) => {
                 {formatCurrency(row.forecast)}
               </td>
               <td className="py-3 px-4 text-right font-mono text-gray-400">
-                {formatCurrency(row.lowerBound)}
+                {formatCurrency(row.lower_bound / 1000000000)}
               </td>
               <td className="py-3 px-4 text-right font-mono text-gray-400">
-                {formatCurrency(row.upperBound)}
+                {formatCurrency(row.upper_bound/ 1000000000)}
               </td>
               <td className="py-3 px-4 text-right">
                 <div className="flex items-center justify-end space-x-2">
@@ -73,13 +73,13 @@ const MonthlyTable = ({ data }) => {
           <tr className="border-t-2 border-gray-200 font-semibold bg-gray-50">
             <td className="py-3 px-4 text-primary">Total</td>
             <td className="py-3 px-4 text-right font-mono text-primary">
-              {formatCurrency(data.reduce((sum, row) => sum + row.forecast, 0))}
+              {formatCurrency(data.reduce((sum, row) => sum + row.forecast, 0))}M
             </td>
             <td className="py-3 px-4 text-right font-mono text-gray-400">
-              {formatCurrency(data.reduce((sum, row) => sum + row.lowerBound, 0))}
+              {formatCurrency(data.reduce((sum, row) => sum + row.lower_bound / 1000000000, 0))}M
             </td>
             <td className="py-3 px-4 text-right font-mono text-gray-400">
-              {formatCurrency(data.reduce((sum, row) => sum + row.upperBound, 0))}
+              {formatCurrency(data.reduce((sum, row) => sum + row.upper_bound / 1000000000, 0))}M
             </td>
             <td className="py-3 px-4"></td>
           </tr>

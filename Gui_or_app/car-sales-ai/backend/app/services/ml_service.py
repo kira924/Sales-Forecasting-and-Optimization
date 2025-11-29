@@ -84,13 +84,13 @@ class MLService:
             else:
                 logger.warning(f" Prophet model not found: {prophet_path}")
             
-            # Load Prophet scaler (if exists)
-            scaler_path = os.path.join(MODEL_DIR, 'prophet_scaler.pkl')
-            if os.path.exists(scaler_path):
-                self.prophet_scaler = joblib.load(scaler_path)
-                logger.info(" Prophet scaler loaded")
-            else:
-                logger.info(" Prophet scaler not found (optional)")
+            # # Load Prophet scaler (if exists)
+            # scaler_path = os.path.join(MODEL_DIR, 'prophet_scaler.pkl')
+            # if os.path.exists(scaler_path):
+            #     self.prophet_scaler = joblib.load(scaler_path)
+            #     logger.info(" Prophet scaler loaded")
+            # else:
+            #     logger.info(" Prophet scaler not found (optional)")
             
             # ============================================
             # CHECK STATUS
@@ -174,7 +174,7 @@ class MLService:
                 })
             
             # Calculate totals
-            total_forecast = sum(m['forecast'] for m in monthly_forecast)
+            total_forecast = float(sum(m['forecast'] for m in monthly_forecast))
             
             # Estimate 2024 total (you can replace with actual data)
             total_2024 = total_forecast * 0.95  # Assuming 5% growth
@@ -182,11 +182,18 @@ class MLService:
             # Filter based on view type
             if view_type == 'quick':
                 monthly_forecast = monthly_forecast[:3]  # First 3 months
-            
+
+            if total_2024 != 0:
+                growth_rate = round(((total_forecast - total_2024) / total_2024) * 100, 2)
+            else:
+                growth_rate = 0 
+
+            logger.info(f" Forecast data generated successfully. Total Forecast: {total_forecast}")
+            logger.info(f" Monthly Forecast Preview: {monthly_forecast[:2]}")
             return {
-                'total_forecast': round(total_forecast, 2),
-                'total_2024': round(total_2024, 2),
-                'growth_rate': round(((total_forecast - total_2024) / total_2024) * 100, 2),
+                'total_forecast': round(float(total_forecast), 2),
+                'total_2024': round(float(total_2024), 2),
+                'growth_rate': float(growth_rate),
                 'monthly_forecast': monthly_forecast,
                 'model_used': 'Prophet'
             }

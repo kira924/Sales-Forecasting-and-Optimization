@@ -1,18 +1,27 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area, AreaChart } from 'recharts';
+// 1. ⚠️ قم بتغيير الاستيراد هنا: استبدل AreaChart بـ ComposedChart
+import { ComposedChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, Area } from 'recharts';
 import { formatCurrency } from '../../utils/helpers';
 import { CHART_COLORS } from '../../utils/constants';
+
+const billion = 1000000000;
 
 const TrendChart = ({ data }) => {
   if (!data || !data.monthlyForecast) return null;
 
   // Prepare chart data
-  const chartData = data.monthlyForecast.map((item, index) => ({
-    month: item.month,
-    forecast: item.forecast,
-    lower: item.lowerBound,
-    upper: item.upperBound,
-  }));
+  const chartData = data.monthlyForecast.map((item) => {
+    const forecastValue = (Number(item.forecast) || 0) / billion;
+    const lowerValue = (Number(item.lower_bound) || 0) / billion; 
+    const upperBoundValue = (Number(item.upper_bound) || 0) / billion; 
+
+    return ({
+      month: item.month,
+      forecast: forecastValue,
+      lower: lowerValue,
+      upper: upperBoundValue,
+    });
+  });
 
   // Custom tooltip
   const CustomTooltip = ({ active, payload }) => {
@@ -22,18 +31,14 @@ const TrendChart = ({ data }) => {
           <p className="font-semibold text-primary mb-2">{payload[0].payload.month}</p>
           <div className="space-y-1 text-sm">
             <p className="text-secondary">
-              <strong>Forecast:</strong> {formatCurrency(payload[0].value)}
+              <strong>Forecast:</strong> ${payload[0].value.toFixed(2)}M
             </p>
-            {payload[1] && (
-              <p className="text-gray-400">
-                <strong>Lower (95%):</strong> {formatCurrency(payload[1].value)}
-              </p>
-            )}
-            {payload[2] && (
-              <p className="text-gray-400">
-                <strong>Upper (95%):</strong> {formatCurrency(payload[2].value)}
-              </p>
-            )}
+            <p className="text-gray-400">
+              <strong>Upper (95%):</strong> ${payload.find(p => p.dataKey === 'upper')?.value.toFixed(2)}M
+            </p>
+            <p className="text-gray-400">
+              <strong>Lower (95%):</strong> ${payload.find(p => p.dataKey === 'lower')?.value.toFixed(2)}M
+            </p>
           </div>
         </div>
       );
@@ -44,7 +49,7 @@ const TrendChart = ({ data }) => {
   return (
     <div className="w-full h-96">
       <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={chartData}>
+        <ComposedChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
           <XAxis 
             dataKey="month" 
@@ -54,7 +59,7 @@ const TrendChart = ({ data }) => {
           <YAxis 
             stroke="#7F8C8D"
             style={{ fontSize: '12px' }}
-            tickFormatter={(value) => `$${(value / 1000000).toFixed(1)}M`}
+            tickFormatter={(value) => `$${value.toFixed(1)}M`}
           />
           <Tooltip content={<CustomTooltip />} />
           <Legend 
@@ -62,11 +67,9 @@ const TrendChart = ({ data }) => {
             iconType="line"
           />
           
-          {/* Confidence Interval (shaded area) */}
           <Area
             type="monotone"
             dataKey="upper"
-            stackId="1"
             stroke="none"
             fill={CHART_COLORS.lightBlue}
             fillOpacity={0.3}
@@ -75,37 +78,34 @@ const TrendChart = ({ data }) => {
           <Area
             type="monotone"
             dataKey="lower"
-            stackId="1"
             stroke="none"
-            fill={CHART_COLORS.lightBlue}
-            fillOpacity={0.3}
-            name="Lower Bound"
+            fill={CHART_COLORS.lightBlue} 
+            fillOpacity={0.1}
+            name="Lower Bound Area"
           />
           
-          {/* Main Forecast Line */}
+          <Line
+            type="monotone"
+            dataKey="lower"
+            stroke="#000000" 
+            strokeWidth={1}
+            dot={false}
+            activeDot={false}
+            name="Lower Bound" 
+          />
+
           <Line
             type="monotone"
             dataKey="forecast"
             stroke={CHART_COLORS.primary}
-            strokeWidth={3}
-            dot={{ fill: CHART_COLORS.primary, r: 4 }}
+            strokeWidth={2}
+            dot={false}
             activeDot={{ r: 6 }}
             name="Forecast"
           />
-        </AreaChart>
+        </ComposedChart>
       </ResponsiveContainer>
       
-      {/* Legend */}
-      <div className="mt-4 flex items-center justify-center space-x-6 text-sm text-gray-400">
-        <div className="flex items-center">
-          <div className="w-8 h-0.5 bg-primary mr-2"></div>
-          <span>Forecast</span>
-        </div>
-        <div className="flex items-center">
-          <div className="w-8 h-3 bg-secondary bg-opacity-30 mr-2"></div>
-          <span>95% Confidence Interval</span>
-        </div>
-      </div>
     </div>
   );
 };

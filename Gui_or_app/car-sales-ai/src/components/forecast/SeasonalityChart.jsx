@@ -74,21 +74,21 @@ const SeasonalityChart = ({ data }) => {
           <div className="w-4 h-4 rounded bg-success"></div>
           <div>
             <p className="font-medium text-gray-500"> Peak Months</p>
-            <p className="text-xs text-gray-400">March, November, December</p>
+            <p className="text-xs text-gray-400">January, November, December</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-4 h-4 rounded bg-gray-400"></div>
           <div>
             <p className="font-medium text-gray-500"> Average Months</p>
-            <p className="text-xs text-gray-400">January, April, May, October</p>
+            <p className="text-xs text-gray-400">February, March, May, June, August</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-4 h-4 rounded bg-danger"></div>
           <div>
             <p className="font-medium text-gray-500"> Low Months</p>
-            <p className="text-xs text-gray-400">June, July, August</p>
+            <p className="text-xs text-gray-400">April, July, October</p>
           </div>
         </div>
       </div>

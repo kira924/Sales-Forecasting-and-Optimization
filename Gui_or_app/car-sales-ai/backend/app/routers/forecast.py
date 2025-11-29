@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 @router.post("/sales", response_model=ForecastResponse)
 async def generate_sales_forecast(
     request: ForecastRequest = ForecastRequest(),
-    current_user: User = Depends(get_current_user)
+    # current_user: User = Depends(get_current_user)
 ):
     """
     Generate sales forecast for the next 12 months
@@ -19,7 +19,8 @@ async def generate_sales_forecast(
     - **view_type**: 'quick' for 3 months or 'full' for 12 months
     """
     try:
-        logger.info(f"Generating forecast for user: {current_user.email}")
+        # logger.info(f"Generating forecast for user: {current_user.email}")
+        logger.info("Generating forecast for UNAUTHENTICATED user (TEST MODE)")
         
         result = ml_service.generate_sales_forecast(request.view_type)
         

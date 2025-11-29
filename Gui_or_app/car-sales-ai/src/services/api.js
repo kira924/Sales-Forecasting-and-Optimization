@@ -133,12 +133,12 @@ const generateMockRankingData = (cars, targetMonth, targetYear, region, profitMa
 export const generateSalesForecast = async () => {
   try {
     // In production, uncomment this:
-    // const response = await api.post('/forecast/sales');
-    // return response;
+    const response = await api.post('/forecast/sales');
+    return response;
     
     // For demo, return mock data
-    await new Promise(resolve => setTimeout(resolve, 500));
-    return generateMockForecastData();
+    // await new Promise(resolve => setTimeout(resolve, 500));
+    // return generateMockForecastData();
   } catch (error) {
     console.error('Error generating sales forecast:', error);
     throw error;
@@ -151,10 +151,10 @@ export const generateSalesForecast = async () => {
 export const generatePriorityRanking = async (data) => {
   try {
     // In production, uncomment this:
-    // const response = await api.post('/ranking/priority', data);
+    const response = await api.post('/ranking/priority', data);
     // return response;
     
-    // For demo, return mock data
+    // For demo
     await new Promise(resolve => setTimeout(resolve, 500));
     return generateMockRankingData(
       data.cars,
