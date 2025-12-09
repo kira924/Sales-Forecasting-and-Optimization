@@ -1,4 +1,4 @@
-# Car Sales Forecasting & Optimization — Full Project
+# Car Sales Forecasting & Optimization — End-to-End Project
 
 A complete end-to-end system for forecasting car sales, ranking dealership priorities, and generating actionable insights using Machine Learning & Prophet models — wrapped inside a full-stack web application (React + FastAPI).
 
