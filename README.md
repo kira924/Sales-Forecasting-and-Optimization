@@ -93,7 +93,7 @@ http://localhost:8000/docs
 - ✅ ML models trained
 - ✅ API working
 - ✅ Frontend integrated
-- ✅ Optional: deploy on huggingface
+- ✅ deploy on huggingface
 
 ## License
 
